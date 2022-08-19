@@ -270,14 +270,15 @@ mousePressEvent(QGraphicsSceneMouseEvent* event)
               _graphModel.deleteConnection(cnId);
             }
           }
+
+          ConnectionId const incompleteConnectionId =
+             makeIncompleteConnectionId(_nodeId,
+                                        portToCheck,
+                                        portIndex);
+
+          nodeScene()->makeDraftConnection(incompleteConnectionId);
         } // if port == out
 
-        ConnectionId const incompleteConnectionId =
-          makeIncompleteConnectionId(_nodeId,
-                                     portToCheck,
-                                     portIndex);
-
-        nodeScene()->makeDraftConnection(incompleteConnectionId);
       }
     }
   }
