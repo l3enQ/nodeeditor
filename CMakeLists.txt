@@ -80,6 +80,7 @@ set(CPP_SOURCE_FILES
   src/ConnectionState.cpp
   src/ConnectionStyle.cpp
   src/DataFlowGraphModel.cpp
+  src/BehaviorTreeGraphModel.cpp
   src/DataFlowGraphicsScene.cpp
   src/NodeDelegateModelRegistry.cpp
   src/Definitions.cpp

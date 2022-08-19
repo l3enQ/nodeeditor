@@ -1,5 +1,7 @@
 add_subdirectory(graph)
 
+add_subdirectory(graph2)
+
 add_subdirectory(calculator)
 
 add_subdirectory(text)
