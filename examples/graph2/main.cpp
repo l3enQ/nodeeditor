@@ -9,6 +9,8 @@
 #include <QtWidgets/QApplication>
 #include <QAction>
 #include <QScreen>
+#include <QLabel>
+#include <QWidgetAction>
 
 
 #include "actionnodedatamodel.h"
@@ -45,21 +47,66 @@ main(int argc, char *argv[])
 
   BehaviorTreeGraphModel graphModel(registry);
 
-
-  for (auto const& cat : registry->categories())
+  // Initialize and connect some nodes.
   {
-      qDebug() << "categories : " << cat;
-  }
+      NodeId const id1 = graphModel.addNode("Control");
+      if (id1 != InvalidNodeId)
+      {
+          graphModel.setNodeData(id1,
+                                 NodeRole::Position,
+                                 QPointF(0, 0));
+      }
 
-  // Initialize and connect two nodes.
-  {
-    NodeId id1 = graphModel.addNode();
-    graphModel.setNodeData(id1, NodeRole::Position, QPointF(0, 0));
+      NodeId const id2 = graphModel.addNode("Control");
+      if (id2 != InvalidNodeId)
+      {
+          graphModel.setNodeData(id2,
+                                 NodeRole::Position,
+                                 QPointF(200, 0));
+      }
+      graphModel.addConnection(ConnectionId{id1, 0, id2, 0});
 
-    NodeId id2 = graphModel.addNode();
-    graphModel.setNodeData(id2, NodeRole::Position, QPointF(300, 0));
+      NodeId const idd1 = graphModel.addNode("Decorator");
+      if (idd1 != InvalidNodeId)
+      {
+          graphModel.setNodeData(idd1,
+                                 NodeRole::Position,
+                                 QPointF(400, 0));
+      }
+      NodeId const idd2 = graphModel.addNode("Decorator");
+      if (idd2 != InvalidNodeId)
+      {
+          graphModel.setNodeData(idd2,
+                                 NodeRole::Position,
+                                 QPointF(400, 200));
+      }
+      graphModel.addConnection(ConnectionId{id2, 0, idd1, 0});
+      graphModel.addConnection(ConnectionId{id2, 0, idd2, 0});
 
-    graphModel.addConnection(ConnectionId{id1, 0, id2, 0});
+      NodeId const ida1 = graphModel.addNode("Action");
+      if (ida1 != InvalidNodeId)
+      {
+          graphModel.setNodeData(ida1,
+                                 NodeRole::Position,
+                                 QPointF(600, 0));
+      }
+      NodeId const ida2 = graphModel.addNode("Action");
+      if (ida2 != InvalidNodeId)
+      {
+          graphModel.setNodeData(ida2,
+                                 NodeRole::Position,
+                                 QPointF(600, 200));
+      }
+      NodeId const ida3 = graphModel.addNode("Action");
+      if (ida3 != InvalidNodeId)
+      {
+          graphModel.setNodeData(ida3,
+                                 NodeRole::Position,
+                                 QPointF(400, 400));
+      }
+      graphModel.addConnection(ConnectionId{idd1, 0, ida1, 0});
+      graphModel.addConnection(ConnectionId{idd2, 0, ida2, 0});
+      graphModel.addConnection(ConnectionId{id2,  0, ida3, 0});
   }
 
   auto scene = new BasicGraphicsScene(graphModel);
@@ -69,50 +116,45 @@ main(int argc, char *argv[])
   // Setup context menu for creating new nodes.
   view.setContextMenuPolicy(Qt::ActionsContextMenu);
 
-  for (auto const& assoc : registry->registeredModelsCategoryAssociation())
+  for (auto const& cat : registry->categories())
   {
-      QString name = assoc.first;
-      QAction *createNodeAction = new QAction(name, &view);
+      auto sep = new QAction();
+      sep->setSeparator(true);
+      view.insertAction(view.actions().front(), sep);
 
-      qDebug() << "assoc : " << assoc.first << assoc.second;
-      QObject::connect(createNodeAction, &QAction::triggered,
-                       [&, name]()
+      for (auto const& assoc : registry->registeredModelsCategoryAssociation())
       {
-          // Mouse position in scene coordinates.
-          QPointF posView =
-                  view.mapToScene(view.mapFromGlobal(QCursor::pos()));
+          if (assoc.second != cat)
+              continue;
 
+          QString name = assoc.first;
+          QAction *createNodeAction = new QAction(name, &view);
 
-          qDebug() << "created: " << name;
-
-          NodeId const newId = graphModel.addNode(name);
-          if (newId != InvalidNodeId)
+          QObject::connect(createNodeAction, &QAction::triggered,
+                           [&, name]()
           {
-              graphModel.setNodeData(newId,
-                                     NodeRole::Position,
-                                     posView);
-          }
-      });
+              // Mouse position in scene coordinates.
+              QPointF posView =
+                      view.mapToScene(view.mapFromGlobal(QCursor::pos()));
 
-      view.insertAction(view.actions().front(), createNodeAction);
+              NodeId const newId = graphModel.addNode(name);
+              if (newId != InvalidNodeId)
+              {
+                  graphModel.setNodeData(newId,
+                                         NodeRole::Position,
+                                         posView);
+              }
+          });
+
+          view.insertAction(view.actions().front(), createNodeAction);
+      }
+      QLabel* label = new QLabel(QString("<b>%0</b>").arg(cat));
+      label->setAlignment(Qt::AlignCenter);
+
+      QWidgetAction *a = new QWidgetAction(nullptr);
+      a->setDefaultWidget(label);
+      view.insertAction(view.actions().front(), a);
   }
-
-
-//  QAction createNodeAction(QStringLiteral("Create Node"), &view);
-//  QObject::connect(&createNodeAction, &QAction::triggered,
-//                   [&]()
-//                   {
-//                     // Mouse position in scene coordinates.
-//                     QPointF posView =
-//                       view.mapToScene(view.mapFromGlobal(QCursor::pos()));
-
-
-//                     NodeId const newId = graphModel.addNode();
-//                     graphModel.setNodeData(newId,
-//                                            NodeRole::Position,
-//                                            posView);
-//                   });
-//  view.insertAction(view.actions().front(), &createNodeAction);
 
   view.setWindowTitle("Simple Node Graph");
   view.resize(800, 600);
