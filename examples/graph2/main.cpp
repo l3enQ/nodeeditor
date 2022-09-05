@@ -10,12 +10,18 @@
 #include <QAction>
 #include <QScreen>
 #include <QLabel>
+#include <QMenuBar>
+#include <QBoxLayout>
 #include <QWidgetAction>
 
 
 #include "actionnodedatamodel.h"
 #include "controlnodedatamodel.h"
 #include "decoratornodedatamodel.h"
+
+#include "qstandarditemmodel.h"
+#include "widgets/loadedtreeswidget.h"
+#include "widgets/modelswidget.h"
 
 
 using QtNodes::ConnectionStyle;
@@ -109,6 +115,84 @@ main(int argc, char *argv[])
       graphModel.addConnection(ConnectionId{id2,  0, ida3, 0});
   }
 
+  auto model = new QStandardItemModel(&app);
+  std::map<QString, QStandardItem *> _tree_view_category_items;
+
+  for (const QString& category : {"Action", "Condition",
+       "Control", "Decorator", "SubTree" } )
+  {
+      auto item = new QStandardItem(category);
+      model->appendRow(item);
+      QFont font = item->data(Qt::FontRole).value<QFont>();
+      font.setBold(true);
+      font.setPointSize(11);
+      item->setData(font, Qt::FontRole);
+      item->setFlags( item->flags() ^ Qt::ItemIsDragEnabled );
+      item->setFlags( item->flags() ^ Qt::ItemIsSelectable );
+      _tree_view_category_items[ category ] = item;
+  }
+
+  for (const auto &it : _tree_view_category_items) {
+      auto item = new QStandardItem(it.first);
+      it.second->appendRow(item);
+      QFont font = item->data(Qt::FontRole).value<QFont>();
+      font.setBold(false);
+      font.setPointSize(10);
+      item->setData(font, Qt::FontRole);
+  }
+
+  auto treesModel = new QStandardItemModel(&app);
+  std::map<QString, QStandardItem *> _tree_view_tree_files;
+
+  for (const QString &file : {"File1", "File2",
+       "File3" } )
+  {
+      auto item = new QStandardItem(file);
+      treesModel->appendRow(item);
+      QFont font = item->data(Qt::FontRole).value<QFont>();
+      font.setBold(false);
+      font.setPointSize(11);
+      item->setData(font, Qt::FontRole);
+      item->setFlags( item->flags() ^ Qt::ItemIsDragEnabled );
+      item->setFlags( item->flags() ^ Qt::ItemIsSelectable );
+      _tree_view_tree_files[ file ] = item;
+  }
+
+  for (const auto &it : _tree_view_tree_files) {
+      auto item = new QStandardItem(it.first);
+      it.second->appendRow(item);
+      QFont font = item->data(Qt::FontRole).value<QFont>();
+      font.setBold(false);
+      font.setPointSize(10);
+      item->setData(font, Qt::FontRole);
+  }
+
+
+  QWidget mainWidget;
+
+  auto menuBar = new QMenuBar();
+  auto saveAction = menuBar->addAction("Save..");
+  auto loadAction = menuBar->addAction("Load..");
+
+  QVBoxLayout* l = new QVBoxLayout(&mainWidget);
+  l->setContentsMargins(0, 0, 0, 0);
+  l->setSpacing(0);
+
+  l->addWidget(menuBar);
+
+  QHBoxLayout* lh = new QHBoxLayout();
+  lh->setContentsMargins(0, 0, 0, 0);
+  lh->setSpacing(0);
+  l->addLayout(lh);
+
+  QVBoxLayout* lv = new QVBoxLayout();
+  lh->setContentsMargins(0, 0, 0, 0);
+  lh->setSpacing(0);
+  lh->addLayout(lv);
+
+  lv->addWidget(new ModelsWidget("Trees", treesModel));
+  lv->addWidget(new ModelsWidget("Models", model));
+
   auto scene = new BasicGraphicsScene(graphModel);
 
   GraphicsView view(scene);
@@ -156,12 +240,13 @@ main(int argc, char *argv[])
       view.insertAction(view.actions().front(), a);
   }
 
-  view.setWindowTitle("Simple Node Graph");
-  view.resize(800, 600);
+  lh->addWidget(&view);
 
+  mainWidget.setWindowTitle("Simple Node Graph");
+  mainWidget.resize(800, 600);
   // Center window.
-  view.move(QApplication::primaryScreen()->availableGeometry().center() - view.rect().center());
-  view.showNormal();
+  mainWidget.move(QApplication::primaryScreen()->availableGeometry().center() - mainWidget.rect().center());
+  mainWidget.showNormal();
 
   return app.exec();
 }
