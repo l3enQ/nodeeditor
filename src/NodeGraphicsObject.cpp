@@ -277,6 +277,9 @@ mousePressEvent(QGraphicsSceneMouseEvent* event)
                                         portIndex);
 
           nodeScene()->makeDraftConnection(incompleteConnectionId);
+
+          if (!flags().testFlag(ItemIsSelectable))  // if root
+              return;
         } // if port == out
 
       }

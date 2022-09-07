@@ -111,4 +111,21 @@ private:
   // either nullptr or owned by parent QGraphicsItem
   QGraphicsProxyWidget * _proxyWidget;
 };
+
+class RootNodeObject : public NodeGraphicsObject
+{
+
+public:
+  RootNodeObject(BasicGraphicsScene &scene,
+                 NodeId node):NodeGraphicsObject(scene, node)  {
+
+      setFlag(QGraphicsItem::ItemIsFocusable,                      true);
+      setFlag(QGraphicsItem::ItemIsMovable,                        false);
+      setFlag(QGraphicsItem::ItemIsSelectable,                     false);
+
+  }
+
+  ~RootNodeObject() override = default;
+};
+
 }
