@@ -185,8 +185,13 @@ traverseGraphAndPopulateGraphicsObjects()
       auto nodeId = fifo.front();
       fifo.pop();
 
-      _nodeGraphicsObjects[nodeId] =
-        std::make_unique<NodeGraphicsObject>(*this, nodeId);
+      auto caption = _graphModel.nodeData(nodeId, NodeRole::Caption).toString();
+      if ( caption != "Root")
+          _nodeGraphicsObjects[nodeId] =
+            std::make_unique<NodeGraphicsObject>(*this, nodeId);
+      else
+          _nodeGraphicsObjects[nodeId] =
+            std::make_unique<RootNodeObject>(*this, nodeId);
 
       unsigned int nOutPorts =
         _graphModel.nodeData(nodeId, NodeRole::NumberOfOutPorts).toUInt();
