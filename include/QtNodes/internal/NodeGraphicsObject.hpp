@@ -123,10 +123,9 @@ public:
   RootNodeObject(BasicGraphicsScene &scene,
                  NodeId node):NodeGraphicsObject(scene, node)  {
 
-      setFlag(QGraphicsItem::ItemIsFocusable,                      false);
+      setFlag(QGraphicsItem::ItemIsFocusable,                      true);
       setFlag(QGraphicsItem::ItemIsMovable,                        false);
       setFlag(QGraphicsItem::ItemIsSelectable,                     false);
-      setFlag(QGraphicsItem::ItemSendsScenePositionChanges,        false);
 
   }
 
