@@ -181,6 +181,23 @@ moveConnections() const
   }
 }
 
+void NodeGraphicsObject::onNodeResized()
+{
+  if (auto w = _graphModel.nodeData(_nodeId, NodeRole::Widget).value<QWidget*>())
+  {
+    w->adjustSize();
+
+    prepareGeometryChange();
+
+    NodeGeometry geometry(*this);
+
+    geometry.recalculateSize();
+
+    update();
+
+    moveConnections();
+  }
+}
 
 void
 NodeGraphicsObject::
@@ -461,5 +478,4 @@ contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   Q_EMIT nodeScene()->nodeContextMenu(_nodeId, mapToScene(event->pos()));
 }
 
-
-}
+}   // namespace QtNodes

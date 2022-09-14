@@ -60,6 +60,9 @@ public:
   void
   moveConnections() const;
 
+  void
+  onNodeResized();
+
   /// Repaints the node once with reacting ports.
   void
   reactToConnection(ConnectionGraphicsObject const * cgo);

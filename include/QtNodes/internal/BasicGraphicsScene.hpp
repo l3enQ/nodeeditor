@@ -165,6 +165,9 @@ private Q_SLOTS:
   onNodeDeleted(NodeId const nodeId);
 
   void
+  onNodeResized(NodeId const nodeId);
+
+  void
   onNodeCreated(NodeId const nodeId);
 
   void

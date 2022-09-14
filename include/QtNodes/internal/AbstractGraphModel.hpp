@@ -220,6 +220,9 @@ Q_SIGNALS:
   nodeDeleted(NodeId const nodeId);
 
   void
+  nodeResized(NodeId const nodeId);
+
+  void
   nodePositionUpdated(NodeId const nodeId);
 
   void
