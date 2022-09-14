@@ -95,6 +95,8 @@ embedQWidget()
   {
     _proxyWidget = new QGraphicsProxyWidget(this);
 
+    w->installEventFilter(this);
+
     _proxyWidget->setWidget(w);
 
     _proxyWidget->setPreferredWidth(5);
@@ -473,5 +475,33 @@ contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   Q_EMIT nodeScene()->nodeContextMenu(_nodeId, mapToScene(event->pos()));
 }
 
+bool NodeGraphicsObject::eventFilter(QObject* watched, QEvent* event)
+{
+  if (event->type() == QEvent::Resize)
+  {
+    if (auto w = _graphModel.nodeData(_nodeId, NodeRole::Widget).value<QWidget*>())
+    {
+      prepareGeometryChange();
 
+      auto oldSize = w->size();
+
+      NodeGeometry geometry(*this);
+
+      _proxyWidget->setMinimumSize(oldSize);
+      _proxyWidget->setMaximumSize(oldSize);
+      _proxyWidget->setPos(geometry.widgetPosition());
+
+      // Passes the new size to the model.
+      geometry.recalculateSize();
+
+      update();
+
+      moveConnections();
+
+      event->accept();
+    }
+  }
+  return QGraphicsObject::eventFilter(watched, event);
 }
+
+}   // namespace QtNodes

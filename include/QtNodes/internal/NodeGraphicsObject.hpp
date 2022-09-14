@@ -99,6 +99,9 @@ protected:
   void
   contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
+  bool
+  eventFilter(QObject *watched, QEvent *event) override;
+
 private:
 
   void
