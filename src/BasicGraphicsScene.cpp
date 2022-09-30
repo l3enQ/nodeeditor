@@ -50,6 +50,9 @@ BasicGraphicsScene(AbstractGraphModel &graphModel,
   connect(&_graphModel, &AbstractGraphModel::nodeDeleted,
           this, &BasicGraphicsScene::onNodeDeleted);
 
+  connect(&_graphModel, &AbstractGraphModel::nodeResized,
+          this, &BasicGraphicsScene::onNodeResized);
+
   connect(&_graphModel, &AbstractGraphModel::nodePositionUpdated,
           this, &BasicGraphicsScene::onNodePositionUpdated);
 
@@ -285,6 +288,16 @@ onNodeDeleted(NodeId const nodeId)
   }
 }
 
+void
+BasicGraphicsScene::
+onNodeResized(const NodeId nodeId)
+{
+  auto it = _nodeGraphicsObjects.find(nodeId);
+  if (it != _nodeGraphicsObjects.end())
+  {
+    it->second->onNodeResized();
+  }
+}
 
 void
 BasicGraphicsScene::

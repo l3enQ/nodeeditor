@@ -60,6 +60,8 @@ public:
   void
   moveConnections() const;
 
+  void
+  onNodeResized();
 
   /// Repaints the node once with reacting ports.
   void
@@ -98,9 +100,6 @@ protected:
 
   void
   contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
-
-  bool
-  eventFilter(QObject *watched, QEvent *event) override;
 
 private:
 
