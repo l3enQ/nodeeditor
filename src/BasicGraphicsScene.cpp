@@ -127,6 +127,38 @@ clearScene()
 }
 
 
+void
+BasicGraphicsScene::
+lockNode(const NodeId nodeId, bool locked)
+{
+  auto node = nodeGraphicsObject(nodeId);
+  if (node)
+  {
+    node->lock(locked);
+
+    size_t const n = _graphModel.nodeData(nodeId, NodeRole::NumberOfOutPorts).toUInt();
+    for (PortIndex portIndex = 0; portIndex < n; ++portIndex)
+    {
+      auto const& connectedNodes = _graphModel.connectedNodes(nodeId, PortType::Out, portIndex);
+
+      for (auto& cn : connectedNodes)
+      {
+        // out node id, out port index, in node id, in port index.
+        ConnectionId connectionId{cn.first, cn.second, nodeId, portIndex};
+        invertConnection(connectionId);
+
+        auto cgo = connectionGraphicsObject(connectionId);
+
+        if (cgo)
+          cgo->lock(locked);
+      }
+    }
+
+    node->update();
+  }
+}
+
+
 NodeGraphicsObject*
 BasicGraphicsScene::
 nodeGraphicsObject(NodeId nodeId)

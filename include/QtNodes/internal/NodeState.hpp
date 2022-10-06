@@ -34,6 +34,14 @@ public:
   setHovered(bool hovered = true)
   { _hovered = hovered; }
 
+  bool
+  locked() const
+  { return _locked; }
+
+  void
+  setLocked(bool locked = true)
+  { _locked = locked; }
+
   void
   setResizing(bool resizing);
 
@@ -54,6 +62,7 @@ private:
   NodeGraphicsObject & _ngo;
 
   bool _hovered;
+  bool _locked;
 
   bool _resizing;
 

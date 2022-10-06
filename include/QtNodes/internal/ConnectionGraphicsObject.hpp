@@ -68,6 +68,8 @@ public:
   void
   move();
 
+  void lock(bool locked);
+
   ConnectionState const &
   connectionState() const;
 

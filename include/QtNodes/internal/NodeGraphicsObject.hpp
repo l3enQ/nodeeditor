@@ -67,6 +67,8 @@ public:
   void
   reactToConnection(ConnectionGraphicsObject const * cgo);
 
+  void lock(bool locked);
+
 protected:
 
   void

@@ -73,6 +73,9 @@ public:
   void
   clearScene();
 
+  void
+  lockNode(NodeId const nodeId, bool locked);
+
 public:
 
   /// @returns NodeGraphicsObject associated with the given nodeId.

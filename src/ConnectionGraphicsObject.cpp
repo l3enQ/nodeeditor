@@ -218,6 +218,12 @@ move()
   update();
 }
 
+void ConnectionGraphicsObject::lock(bool locked)
+{
+  setFlag(QGraphicsItem::ItemIsMovable, !locked);
+  setFlag(QGraphicsItem::ItemIsFocusable, !locked);
+  setFlag(QGraphicsItem::ItemIsSelectable, !locked);
+}
 
 ConnectionState const &
 ConnectionGraphicsObject::
@@ -344,7 +350,6 @@ hoverEnterEvent(QGraphicsSceneHoverEvent * event)
 
   event->accept();
 }
-
 
 void
 ConnectionGraphicsObject::
