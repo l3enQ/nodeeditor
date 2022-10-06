@@ -208,6 +208,14 @@ reactToConnection(ConnectionGraphicsObject const* cgo)
   update();
 }
 
+void NodeGraphicsObject::lock(bool locked)
+{
+  _nodeState.setLocked(locked);
+
+  setFlag(QGraphicsItem::ItemIsFocusable, !locked);
+  setFlag(QGraphicsItem::ItemIsMovable, !locked);
+  setFlag(QGraphicsItem::ItemIsSelectable, !locked);
+}
 
 void
 NodeGraphicsObject::
@@ -238,8 +246,8 @@ void
 NodeGraphicsObject::
 mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-  //if (_nodeState.locked())
-  //return;
+  if (_nodeState.locked())
+    return;
 
   for (PortType portToCheck: {PortType::In, PortType::Out})
   {
@@ -325,6 +333,9 @@ void
 NodeGraphicsObject::
 mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
+  if (_nodeState.locked())
+    return;
+
   // deselect all other items after this one is selected
   if (!isSelected())
   {

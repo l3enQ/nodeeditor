@@ -67,6 +67,8 @@ public:
   void
   reactToConnection(ConnectionGraphicsObject const * cgo);
 
+  void lock(bool locked);
+
 protected:
   void
   paint(QPainter* painter,
@@ -122,9 +124,9 @@ public:
   RootNodeObject(BasicGraphicsScene &scene,
                  NodeId node):NodeGraphicsObject(scene, node)  {
 
-      setFlag(QGraphicsItem::ItemIsFocusable,                      true);
-      setFlag(QGraphicsItem::ItemIsMovable,                        false);
-      setFlag(QGraphicsItem::ItemIsSelectable,                     false);
+      setFlag(QGraphicsItem::ItemIsFocusable,  true);
+      setFlag(QGraphicsItem::ItemIsMovable,    false);
+      setFlag(QGraphicsItem::ItemIsSelectable, false);
 
   }
 
