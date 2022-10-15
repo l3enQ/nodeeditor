@@ -12,6 +12,7 @@ NodeState(NodeGraphicsObject & ngo)
   : _ngo(ngo)
   , _hovered(false)
   , _locked(false)
+  , _root(false)
   , _resizing(false)
   , _connectionForReaction{nullptr}
 {

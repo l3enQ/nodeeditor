@@ -43,6 +43,14 @@ public:
   setLocked(bool locked = true)
   { _locked = locked; }
 
+  bool
+  isRoot() const
+  { return _root; }
+
+  void
+  setRoot(bool root = true)
+  { _root = root; }
+
   void
   setResizing(bool resizing);
 
@@ -64,6 +72,7 @@ private:
 
   bool _hovered;
   bool _locked;
+  bool _root;
   bool _resizing;
 
   // QPointer tracks the QObject inside and is automatically cleared

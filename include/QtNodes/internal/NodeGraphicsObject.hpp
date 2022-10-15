@@ -106,7 +106,7 @@ private:
   void
   embedQWidget();
 
-private:
+protected:
   NodeId _nodeId;
 
   AbstractGraphModel &_graphModel;
@@ -128,6 +128,7 @@ public:
       setFlag(QGraphicsItem::ItemIsMovable,    false);
       setFlag(QGraphicsItem::ItemIsSelectable, false);
 
+      _nodeState.setRoot();
   }
 
   ~RootNodeObject() override = default;
