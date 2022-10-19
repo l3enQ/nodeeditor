@@ -84,12 +84,19 @@ redo()
   auto & graphModel = _scene->graphModel();
 
   QJsonArray nodesJsonArray = _sceneJson["nodes"].toArray();
+  QJsonArray nodesJsonArrayUpdated;
 
   for (QJsonValueRef node : nodesJsonArray)
   {
     QJsonObject nodeJson = node.toObject();
-    graphModel.deleteNode(static_cast<NodeId>(nodeJson["id"].toInt()));
+    NodeId nodeId = static_cast<NodeId>(nodeJson["id"].toInt());
+    graphModel.updateNode(nodeJson);
+    graphModel.deleteNode(nodeId);
+
+    nodesJsonArrayUpdated.append(nodeJson);
   }
+
+  _sceneJson["nodes"] = nodesJsonArrayUpdated;
 
   QJsonArray connectionJsonArray = _sceneJson["connections"].toArray();
 

@@ -172,6 +172,14 @@ public:
   saveNode(NodeId const) const { return {}; }
 
   /**
+   * Reimplement the function if you want to update the node's
+   * inner state during undo/redo node deletion operations.
+   */
+  virtual
+  void
+  updateNode(QJsonObject &) {}
+
+  /**
    * Reimplement the function if you want to support:
    *
    *   - graph save/restore operations,
