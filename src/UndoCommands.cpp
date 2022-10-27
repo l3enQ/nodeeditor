@@ -61,6 +61,8 @@ undo()
 {
   auto & graphModel = _scene->graphModel();
 
+  Q_EMIT(graphModel.operationToBeDone());
+
   QJsonArray nodesJsonArray = _sceneJson["nodes"].toArray();
 
   for (QJsonValueRef node : nodesJsonArray)
@@ -74,6 +76,8 @@ undo()
   {
     graphModel.loadConnection(connection.toObject());
   }
+
+  Q_EMIT(graphModel.operationDone());
 }
 
 
@@ -82,6 +86,8 @@ DeleteCommand::
 redo()
 {
   auto & graphModel = _scene->graphModel();
+
+  Q_EMIT(graphModel.operationToBeDone());
 
   QJsonArray nodesJsonArray = _sceneJson["nodes"].toArray();
   QJsonArray nodesJsonArrayUpdated;
@@ -111,6 +117,8 @@ redo()
 
     graphModel.deleteConnection(connId);
   }
+
+  Q_EMIT(graphModel.operationDone());
 }
 
 

@@ -274,6 +274,16 @@ Q_SIGNALS:
   portsInserted(NodeId const   nodeId,
                 PortType const portType,
                 std::unordered_set<PortIndex> const &portIndexSet);
+
+  /**
+   * Signal emitted when model is going to do multiple operations which
+   * affect the tree, so the other is emitted when it is completerd; so,
+   * anyone needs to be updated, does it there.
+   */
+  void
+  operationToBeDone();
+  void
+  operationDone();
 };
 
 }
