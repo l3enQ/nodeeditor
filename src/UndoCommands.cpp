@@ -232,6 +232,13 @@ mergeWith(QUndoCommand const *c)
 {
   auto mc = static_cast<MoveNodeCommand const*>(c);
 
+  if (_scene != mc->_scene || _nodeId != mc->_nodeId)
+  {
+    return false;
+  }
+
+  // we can add a time criteria, and a diff criteria too!
+
   _diff += mc->_diff;
 
   return true;
