@@ -77,7 +77,7 @@ private:
   BasicGraphicsScene* _scene;
   NodeId _nodeId;
   QPointF _diff;
+  QPointF _oldPos;
+  QPointF _newPos;
 };
-
-
-}
+} // namespace QtNodes

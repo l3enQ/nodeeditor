@@ -188,6 +188,9 @@ MoveNodeCommand(BasicGraphicsScene* scene,
   , _nodeId(nodeId)
   , _diff(diff)
 {
+  _oldPos = _scene->graphModel().nodeData(_nodeId, NodeRole::Position).value<QPointF>();
+
+  _newPos = _oldPos + _diff;
 }
 
 void
@@ -200,7 +203,7 @@ undo()
 
   oldPos -= _diff;
 
-  _scene->graphModel().setNodeData(_nodeId, NodeRole::Position, oldPos);
+  _scene->graphModel().setNodeData(_nodeId, NodeRole::Position, _oldPos);
 }
 
 
@@ -214,7 +217,7 @@ redo()
 
   oldPos += _diff;
 
-  _scene->graphModel().setNodeData(_nodeId, NodeRole::Position, oldPos);
+  _scene->graphModel().setNodeData(_nodeId, NodeRole::Position, _newPos);
 }
 
 
@@ -240,6 +243,7 @@ mergeWith(QUndoCommand const *c)
   // we can add a time criteria, and a diff criteria too!
 
   _diff += mc->_diff;
+  _newPos = mc->_newPos;
 
   return true;
 }
