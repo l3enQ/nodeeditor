@@ -106,6 +106,8 @@ setScene(BasicGraphicsScene *scene)
 
   addAction(_deleteSelectionAction);
 
+  // as we handle manually
+  return;
 
   auto undoAction = scene->undoStack().createUndoAction(this, tr("&Undo"));
   undoAction->setShortcuts(QKeySequence::Undo);
