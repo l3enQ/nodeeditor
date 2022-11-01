@@ -293,6 +293,7 @@ mousePressEvent(QGraphicsSceneMouseEvent* event)
             for (auto& cnId : connected)
             {
               _graphModel.deleteConnection(cnId);
+              Q_EMIT nodeScene()->connectionRemoved();
             }
           }
 
@@ -319,6 +320,8 @@ mousePressEvent(QGraphicsSceneMouseEvent* event)
     bool const hit = geometry.resizeRect().contains(QPoint(pos.x(), pos.y()));
     _nodeState.setResizing(hit);
   }
+
+  _nodeState.setPressedPos(event->scenePos());
 
   QGraphicsObject::mousePressEvent(event);
 
@@ -397,6 +400,10 @@ void
 NodeGraphicsObject::
 mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
+  if (!_nodeState.resizing() && _nodeState.pressedPos() != event->scenePos())
+  {
+    Q_EMIT nodeScene()->nodeMoved(_nodeId, scenePos());
+  }
   _nodeState.setResizing(false);
 
   QGraphicsObject::mouseReleaseEvent(event);

@@ -137,6 +137,15 @@ Q_SIGNALS:
   void
   nodeContextMenu(NodeId const nodeId, QPointF const pos);
 
+  void
+  selectionRemoved();
+
+  void
+  connectionRemoved();
+
+  void
+  connectionAdded();
+
 private:
 
   /// @brief Creates Node and Connection graphics objects.

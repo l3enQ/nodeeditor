@@ -66,6 +66,9 @@ public:
   void
   resetConnectionForReaction();
 
+  QPointF pressedPos() const;
+  void setPressedPos(QPointF newPressedPos);
+
 private:
 
   NodeGraphicsObject & _ngo;
@@ -74,6 +77,8 @@ private:
   bool _locked;
   bool _root;
   bool _resizing;
+
+  QPointF _pressedPos;
 
   // QPointer tracks the QObject inside and is automatically cleared
   // when the object is destroyed.

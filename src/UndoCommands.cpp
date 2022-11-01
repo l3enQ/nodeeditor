@@ -104,6 +104,8 @@ redo()
 
     graphModel.deleteConnection(connId);
   }
+
+  Q_EMIT _scene->selectionRemoved();
 }
 
 
@@ -131,6 +133,8 @@ DisconnectCommand::
 redo()
 {
   _scene->graphModel().deleteConnection(_connId);
+
+  Q_EMIT _scene->connectionRemoved();
 }
 
 
@@ -159,6 +163,8 @@ ConnectCommand::
 redo()
 {
   _scene->graphModel().addConnection(_connId);
+
+  Q_EMIT _scene->connectionAdded();
 }
 
 

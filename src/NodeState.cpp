@@ -60,4 +60,16 @@ resetConnectionForReaction()
 }
 
 
+QPointF NodeState::pressedPos() const
+{
+  return _pressedPos;
+}
+
+
+void NodeState::setPressedPos(QPointF newPressedPos)
+{
+  _pressedPos = newPressedPos;
+}
+
+
 }
