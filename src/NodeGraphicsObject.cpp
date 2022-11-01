@@ -400,6 +400,9 @@ void
 NodeGraphicsObject::
 mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
+  if (_nodeState.locked())
+    return;
+
   if (!_nodeState.resizing() && _nodeState.pressedPos() != event->scenePos())
   {
     Q_EMIT nodeScene()->nodeMoved(_nodeId, scenePos());
