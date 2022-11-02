@@ -155,46 +155,47 @@ NodeGeometry::
 portNodePosition(PortType const  portType,
                  PortIndex const index) const
 {
+  PortLayout layout = _graphModel.portLayout();
   auto const& nodeStyle = StyleCollection::nodeStyle();
 
-  unsigned int step = _entryHeight + _verticalSpacing;
-
   QPointF result;
-
-  double totalHeight = 0.0;
-
-  totalHeight += captionHeight();
-
-  totalHeight += step * index;
-
-  // TODO: why?
-  totalHeight += step / 2.0;
-
   QSize size =
     _graphModel.nodeData(_ngo.nodeId(), NodeRole::Size).value<QSize>();
 
-  switch (portType)
+  auto role = (portType == PortType::Out) ? NodeRole::NumberOfOutPorts : NodeRole::NumberOfInPorts;
+  int nPorts = _graphModel.nodeData(_ngo.nodeId(), role).toInt();
+
+  if(layout == PortLayout::Horizontal)
   {
-    case PortType::Out:
+    int step = size.height() / (1+nPorts);
+    double posY = (1+index) * step;
+
+    if(portType == PortType::Out)
     {
       double x = size.width() + nodeStyle.ConnectionPointDiameter;
-
-      result = QPointF(x, totalHeight);
-      break;
+      result = QPointF(x, posY);
     }
-
-    case PortType::In:
+    else if(portType == PortType::In)
     {
       double x = 0.0 - nodeStyle.ConnectionPointDiameter;
-
-      result = QPointF(x, totalHeight);
-      break;
+      result = QPointF(x, posY);
     }
-
-    default:
-      break;
   }
-
+  else
+  {
+    int step = size.width() / (1+nPorts);
+    double posX = (1+index) * step;
+    if(portType == PortType::Out)
+    {
+      double y = size.height() + nodeStyle.ConnectionPointDiameter;
+      result = QPointF(posX, y);
+    }
+    else if(portType == PortType::In)
+    {
+      double y = -nodeStyle.ConnectionPointDiameter;
+      result = QPointF(posX, y);
+    }
+  }
   return result;
 }
 

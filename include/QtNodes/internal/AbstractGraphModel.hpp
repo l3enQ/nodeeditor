@@ -205,6 +205,10 @@ public:
   void
   loadConnection(QJsonObject const & connJson) = 0;
 
+  void setPortLayout(PortLayout layout);
+
+  PortLayout portLayout() const;
+
 Q_SIGNALS:
 
   void
@@ -266,6 +270,9 @@ Q_SIGNALS:
   portsInserted(NodeId const   nodeId,
                 PortType const portType,
                 std::unordered_set<PortIndex> const &portIndexSet);
+
+  private:
+  PortLayout _portLayout = PortLayout::Horizontal;
 };
 
 }

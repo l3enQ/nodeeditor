@@ -371,36 +371,28 @@ std::pair<QPointF, QPointF>
 ConnectionGraphicsObject::
 pointsC1C2() const
 {
-  const double defaultOffset = 200;
+  auto const layout = graphModel().portLayout();
+  const double maxOffset = 200;
+  const double minOffset = 40;
 
-  double xDistance = _in.x() - _out.x();
+  double distance = ( layout == PortLayout::Horizontal ) ?
+    (_in.x() - _out.x()) : (_in.y() - _out.y());
 
-  double horizontalOffset = qMin(defaultOffset, std::abs(xDistance));
+  double ratio = (distance <= 0) ? 1.0 : 0.4;
+  double offset = std::abs(distance) * ratio;
+  offset = std::clamp( offset, minOffset, maxOffset);
 
-  double verticalOffset = 0;
-
-  double ratioX = 0.5;
-
-  if (xDistance <= 0)
+  if( layout == PortLayout::Horizontal)
   {
-    double yDistance = _in.y() - _out.y() + 20;
-
-    double vector = yDistance < 0 ? -1.0 : 1.0;
-
-    verticalOffset = qMin(defaultOffset, std::abs(yDistance)) * vector;
-
-    ratioX = 1.0;
+    QPointF c1(_out.x() + offset, _out.y());
+    QPointF c2(_in.x() - offset, _in.y());
+    return std::make_pair(c1, c2);
   }
-
-  horizontalOffset *= ratioX;
-
-  QPointF c1(_out.x() + horizontalOffset,
-             _out.y() + verticalOffset);
-
-  QPointF c2(_in.x() - horizontalOffset,
-             _in.y() - verticalOffset);
-
-  return std::make_pair(c1, c2);
+  else {
+    QPointF c1(_out.x(), _out.y() + offset);
+    QPointF c2(_in.x(), _in.y() - offset);
+    return std::make_pair(c1, c2);
+  }
 }
 
 
