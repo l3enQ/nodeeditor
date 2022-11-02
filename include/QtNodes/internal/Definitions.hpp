@@ -85,6 +85,13 @@ enum class PortType
 };
 Q_ENUM_NS(PortType)
 
+enum class PortLayout
+{
+  Horizontal = 0,
+  Vertical = 1
+};
+Q_ENUM_NS(PortLayout)
+
 
 /// ports are consecutively numbered starting from zero.
 using PortIndex = unsigned int;
