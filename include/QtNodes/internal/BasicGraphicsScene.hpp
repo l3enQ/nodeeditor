@@ -81,6 +81,9 @@ public:
   void
   lockNode(NodeId const nodeId, bool locked);
 
+  void
+  onPortLayoutUpdated(PortLayout layout);
+
 public:
 
   /// @returns NodeGraphicsObject associated with the given nodeId.
@@ -204,7 +207,6 @@ private Q_SLOTS:
   onPortsInserted(NodeId const nodeId,
                   PortType const portType,
                   std::unordered_set<PortIndex> const &portIndexSet);
-
 
 private:
 
