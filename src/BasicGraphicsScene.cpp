@@ -437,4 +437,13 @@ onPortsInserted(NodeId const nodeId,
   Q_UNUSED(portIndexSet);
 }
 
+void BasicGraphicsScene::onPortLayoutUpdated(PortLayout)
+{
+  for(auto& [nodeId, nodes]: _nodeGraphicsObjects)
+  {
+    nodes->moveConnections();
+    nodes->update();
+  }
+}
+
 }
